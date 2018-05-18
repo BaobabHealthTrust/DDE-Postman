@@ -1,5 +1,4 @@
 
-@people_limit = 100
 @session = nil
 @dde_link = "http://localhost:3000/v1"
 
