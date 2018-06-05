@@ -1,6 +1,7 @@
 
 @people_limit = 100
 @session = nil
+#@dde_link = "http://192.168.18.188:3000/v1"
 @dde_link = "http://localhost:3000/v1"
 
 def start
@@ -9,6 +10,7 @@ def start
   output = JSON.parse(RestClient.post url, user_credentials)
   @session = output['access_token']
 
+=begin
   begin
     url = "#{@dde_link}/assign_npids"
     output = RestClient::Request.execute( { :method => :post, :url => url,
@@ -17,19 +19,20 @@ def start
   rescue
     return
   end
-  
+
+  return
+=end
   url = "#{@dde_link}/add_person"
 
   1.upto(ARGV[0].to_i).each do |n|
     person_params = fake_people(n)
-    puts person_params
 
     output = RestClient::Request.execute( { :method => :post, :url => url,
     :payload => person_params, 
     :headers => {:Authorization => @session} } )
 
     results  = JSON.parse(output)
-    puts "##### #{results['_id']}"
+    puts "##### #{results}"
   end
 
 end
@@ -43,7 +46,7 @@ def fake_people(n)
     middle_name:  nil,
     gender: gender[rand(0..1)],          
     birthdate:  Faker::Date.birthday(0, 75).strftime('%Y-%m-%d'),              
-    birthdate_estimated: rand(0..1),   
+    birthdate_estimated: 0,   
     attributes: {
       occupation: "",
       cellphone_number: Faker::PhoneNumber.cell_phone,           
@@ -58,9 +61,8 @@ def fake_people(n)
   }   
 
   return params
+ 
 end
-
-
 
 
 
